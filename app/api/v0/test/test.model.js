@@ -1,11 +1,12 @@
 var ObjectId = require('mongodb').ObjectID;
+var hex = /[0-9A-Fa-f]{6}/g;
 
 module.exports.create = function(db, data, callback) {
   //var valid = Util.validateModel(data, { required:['key'], number:['key'], string:['name','description'] });
   var valid = true;
   if(valid){
       db.collection('test').insertOne( {
-          name            : data.name,
+          title            : data.title,
           description     : data.description,
           date            : new Date(),
       }, function(err, result){
@@ -35,25 +36,30 @@ module.exports.retrieve = function(db, callback) {
 };
 
 module.exports.detail = function(db, id, callback) {
-   var result = [];
-   var cursor = db.collection('test').find({ _id : ObjectId(id) });
+   var result = {}; 
+   id = (hex.test(id))? ObjectId(id) : id;
+   var cursor = db.collection('test').find({ _id : id });
    cursor.each(function(err, doc) {
       if (doc != null) {
           doc.id = doc._id;
           delete doc._id;
           delete doc.date;
-          result.push(doc);
+          result = doc;
       } else {
-         callback(result[0]);
+         callback(result);
       }
    });
 };
 
 module.exports.update = function(db, id, data, callback) {
-   db.collection('test').updateOne(
-        { _id : ObjectId(id) },
+  id = (hex.test(id))? ObjectId(id) : id;
+  db.collection('test').updateOne(
+        { _id : id },
         {
-          $set: data,
+          $set: {
+            title:data.title,
+            description:data.description
+          },
           $currentDate: { "lastModified": true }
         },function(err, results) {
             callback(err, data, 200);
@@ -73,10 +79,10 @@ module.exports.replace = function(db, id, data, callback) {
 };
 
 module.exports.delete = function(db, id, callback) {
-  
+  id = (hex.test(id))? ObjectId(id) : id;
   module.exports.detail(db, id, function(result){
       db.collection('test').deleteMany(
-        { _id : ObjectId(id) },
+        { _id : id },
         function(err, results) {
             callback(err, result, 200);
         }

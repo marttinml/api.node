@@ -29,20 +29,7 @@ module.exports = function(){
     
     for (i in VERSIONS) {
         require('../api' + VERSIONS[i] + 'test/test.router')(app);
-        require('../api' + VERSIONS[i] + 'encuesta/encuesta.router')(app);
-        require('../api' + VERSIONS[i] + 'direccion/direccion.router')(app);
-        require('../api' + VERSIONS[i] + 'tipo_encuesta/tipo_encuesta.router')(app);
-        require('../api' + VERSIONS[i] + 'satisfaccion/satisfaccion.router')(app);
-        require('../api' + VERSIONS[i] + 'responder_encuesta/responder_encuesta.router')(app);
     }
 
     return app;
 };
-
-
-
-
-
-
-
-
