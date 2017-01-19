@@ -2,7 +2,12 @@
 var express         = require("express"),
     bodyParser      = require('body-parser'),
     methodOverride  = require('method-override'),
-    app             = express();
+    app             = express(),
+    info            = {    
+                        "API":"api.node",
+                        "Version":"v0",
+                        "Enviroment":"Pre-Production"
+                    };
 
 module.exports = function(){
 
@@ -10,6 +15,7 @@ module.exports = function(){
         extended: true
     }));
 
+    // CORDS
     app.use(function (req, res, next) {
         res.setHeader('Access-Control-Allow-Origin', '*');
         res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
@@ -18,18 +24,15 @@ module.exports = function(){
         next();
     });
 
-    var VERSIONS = {'Pre-Production': '/v0/'};
     app.get('/', function(req, res) {
-        res.json(VERSIONS);
+        res.json(info);
     });
     
-
+    //bodyParse and override
     app.use(bodyParser.json());
     app.use(methodOverride());
     
-    for (i in VERSIONS) {
-        require('../api' + VERSIONS[i] + 'test/test.router')(app);
-    }
+    require('api.router')(app);
 
     return app;
 };
