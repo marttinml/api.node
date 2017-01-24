@@ -6,16 +6,14 @@ var TestModel 	= require('./test.model'),
     controller  = 'test';
 
 module.exports.create = function (req, res) {
-    var d   = new Date();
-    start   = d.getMilliseconds();
-    Log.logStart({controller : controller, method:'Test.create', d : d, body:req.body });
+  var log = new Log.init({controller : controller, method:'Test.create', body:req.body });
 	Connection.ejecute(function(err, db){
         assert.equal(null, err);
         //ejecute query
         TestModel.create(db, req.body, function(err, result, status) {
-            assert.equal(err, null);
+            assert.equal(null, err);
             db.close();
-            Log.logEnd({ start : start , response: result});
+            log.end(result);
             //response
             res.status(status).jsonp(result);
         });
@@ -25,44 +23,40 @@ module.exports.create = function (req, res) {
 module.exports.retrieve = function (req, res) {
     var d   = new Date();
     start   = d.getMilliseconds();
-    Log.logStart({controller : controller, method:'Test.retrieve', d : d });
+    var log = new Log.init({controller : controller, method:'Test.retrieve'});
     Connection.ejecute(function(err, db){
         assert.equal(null, err);
         //ejecute query
-      TestModel.retrieve(db, function(result) {
+      TestModel.retrieve(db, function(err, result, status) {
           db.close();
-          Log.logEnd({ start : start , response: result});
+          log.end(result);
           res.status(200).jsonp(result);
       });
     });
 };
 
 module.exports.detail = function (req, res) {
-    var d   = new Date();
-        start   = d.getMilliseconds();
-        Log.logStart({controller : controller, method:'Test.detail', d : d, body: req.params.id});
+    var log = new Log.init({controller : controller, method:'Test.detail', body:req.params.testId});
     Connection.ejecute(function(err, db){
         assert.equal(null, err);
         //ejecute query
-      TestModel.detail(db, req.params.id, function(result) {
+      TestModel.detail(db, req.params.testId, function(err, result, status) {
           db.close();
-          Log.logEnd({ start : start , response: result});
+          log.end(result);
           res.status(200).jsonp(result);
       });
     });
 };
 
 module.exports.update = function (req, res) {
-    var d   = new Date();
-    start   = d.getMilliseconds();
-    Log.logStart({controller : controller, method:'Test.update', d : d, body:req.body });
+  var log = new Log.init({controller : controller, method:'Test.update', body:req.body});
   Connection.ejecute(function(err, db){
         assert.equal(null, err);
         //ejecute query
-          TestModel.update(db, req.params.id, req.body, function(err, result, status) {
+          TestModel.update(db, req.params.testId, req.body, function(err, result, status) {
               assert.equal(err, null);
               db.close();
-              Log.logEnd({ start : start , response: result});
+              log.end(result);
               //response
               res.status(status).jsonp(result);
           });
@@ -70,16 +64,14 @@ module.exports.update = function (req, res) {
 };
 
 module.exports.delete = function (req, res) {
-    var d   = new Date();
-    start   = d.getMilliseconds();
-    Log.logStart({controller : controller, method:'Test.delete', d : d });
+  var log = new Log.init({controller : controller, method:'Test.delete', body:req.params.testId});
   Connection.ejecute(function(err, db){
         assert.equal(null, err);
         //ejecute query
-          TestModel.delete(db, req.params.id, function(err, result, status) {
+          TestModel.delete(db, req.params.testId, function(err, result, status) {
               assert.equal(err, null);
               db.close();
-              Log.logEnd({ start : start , response: result});
+              log.end(result);
               //response
               res.status(status).jsonp(result);
           });
