@@ -5,6 +5,5 @@ module.exports = function (app) {
     app.route('/v0/test').get(test.retrieve);
     app.route('/v0/test/:id').get(test.detail);
     app.route('/v0/test/:id').patch(test.update);
-    app.route('/v0/test/:id').put(test.replace);
     app.route('/v0/test/:id').delete(test.delete);
 };

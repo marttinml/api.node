@@ -1,7 +1,7 @@
 var TestModel 	= require('./test.model'),
     assert      = require('assert'),
-    Connection  = require('../../../config/mongodb'),
-    Log         = require('../../../shared/log'),
+    Connection  = require('../../config/api.mongodb'),
+    Log         = require('../../shared/log'),
     merge       = require('merge'),
     controller  = 'test';
 
@@ -60,23 +60,6 @@ module.exports.update = function (req, res) {
         assert.equal(null, err);
         //ejecute query
           TestModel.update(db, req.params.id, req.body, function(err, result, status) {
-              assert.equal(err, null);
-              db.close();
-              Log.logEnd({ start : start , response: result});
-              //response
-              res.status(status).jsonp(result);
-          });
-    });
-};
-
-module.exports.replace = function (req, res) {
-    var d   = new Date();
-    start   = d.getMilliseconds();
-    Log.logStart({controller : controller, method:'Test.replace', d : d, body:req.body });
-  Connection.ejecute(function(err, db){
-        assert.equal(null, err);
-        //ejecute query
-          TestModel.replace(db, req.params.id, req.body, function(err, result, status) {
               assert.equal(err, null);
               db.close();
               Log.logEnd({ start : start , response: result});

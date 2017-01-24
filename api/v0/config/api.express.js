@@ -32,7 +32,7 @@ module.exports = function(){
     app.use(bodyParser.json());
     app.use(methodOverride());
     
-    require('api.router')(app);
+    require('./api.router')(app);
 
     return app;
 };

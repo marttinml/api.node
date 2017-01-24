@@ -1,5 +1,5 @@
-var MongoDB = require('./app/config/mongodb'),
-    express  = require('./app/config/express'),
+var MongoDB = require('./api/v0/config/api.mongodb'),
+    express  = require('./api/v0/config/api.express'),
     app      = express();
 
 
