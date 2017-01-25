@@ -1,16 +1,17 @@
-var TestModel 	= require('./test.model'),
+var testModel 	= require('./test.model'),
     assert      = require('assert'),
-    Connection  = require('../../config/api.mongodb'),
+    connection  = require('../../config/api.mongodb'),
     Log         = require('../../shared/log'),
     merge       = require('merge'),
-    controller  = 'test';
+    controller  = 'test',
+    self        = module.exports;
 
-module.exports.create = function (req, res) {
+self.create = function (req, res) {
   var log = new Log.init({controller : controller, method:'Test.create', body:req.body });
-	Connection.ejecute(function(err, db){
+	connection.ejecute(function(err, db){
         assert.equal(null, err);
         //ejecute query
-        TestModel.create(db, req.body, function(err, result, status) {
+        testModel.create(db, req.body, function(err, result, status) {
             assert.equal(null, err);
             db.close();
             log.end(result);
@@ -20,14 +21,14 @@ module.exports.create = function (req, res) {
     });
 };
 
-module.exports.retrieve = function (req, res) {
+self.retrieve = function (req, res) {
     var d   = new Date();
     start   = d.getMilliseconds();
     var log = new Log.init({controller : controller, method:'Test.retrieve'});
-    Connection.ejecute(function(err, db){
+    connection.ejecute(function(err, db){
         assert.equal(null, err);
         //ejecute query
-      TestModel.retrieve(db, function(err, result, status) {
+      testModel.retrieve(db, function(err, result, status) {
           db.close();
           log.end(result);
           res.status(200).jsonp(result);
@@ -35,25 +36,12 @@ module.exports.retrieve = function (req, res) {
     });
 };
 
-module.exports.detail = function (req, res) {
-    var log = new Log.init({controller : controller, method:'Test.detail', body:req.params.testId});
-    Connection.ejecute(function(err, db){
-        assert.equal(null, err);
-        //ejecute query
-      TestModel.detail(db, req.params.testId, function(err, result, status) {
-          db.close();
-          log.end(result);
-          res.status(200).jsonp(result);
-      });
-    });
-};
-
-module.exports.update = function (req, res) {
+self.update = function (req, res) {
   var log = new Log.init({controller : controller, method:'Test.update', body:req.body});
-  Connection.ejecute(function(err, db){
+  connection.ejecute(function(err, db){
         assert.equal(null, err);
         //ejecute query
-          TestModel.update(db, req.params.testId, req.body, function(err, result, status) {
+          testModel.update(db, req.params.testId, req.body, function(err, result, status) {
               assert.equal(err, null);
               db.close();
               log.end(result);
@@ -63,12 +51,25 @@ module.exports.update = function (req, res) {
     });
 };
 
-module.exports.delete = function (req, res) {
-  var log = new Log.init({controller : controller, method:'Test.delete', body:req.params.testId});
-  Connection.ejecute(function(err, db){
+self.detail = function (req, res) {
+    var log = new Log.init({controller : controller, method:'Test.detail', body:req.params.testId});
+    connection.ejecute(function(err, db){
         assert.equal(null, err);
         //ejecute query
-          TestModel.delete(db, req.params.testId, function(err, result, status) {
+      testModel.detail(db, req.params.testId, function(err, result, status) {
+          db.close();
+          log.end(result);
+          res.status(200).jsonp(result);
+      });
+    });
+};
+
+self.delete = function (req, res) {
+  var log = new Log.init({controller : controller, method:'Test.delete', body:req.params.testId});
+  connection.ejecute(function(err, db){
+        assert.equal(null, err);
+        //ejecute query
+          testModel.delete(db, req.params.testId, function(err, result, status) {
               assert.equal(err, null);
               db.close();
               log.end(result);

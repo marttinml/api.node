@@ -17,7 +17,6 @@ self.response = function(){
     this.error.dbMessage  = dbMessage || {};
     this.error.code       = code      || "202";
     this.error.message    = message   || "Not fount";
-    
   }
   return this;
 };

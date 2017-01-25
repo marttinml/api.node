@@ -3,50 +3,65 @@ self.modelBySchema = function(model, scheme){
 	var result = {
 		valid:true,
 		errors:[]
-	};
+	},
+	string		= "string",
+	number 		= "number",
+	object  	= "object",
+	array 		= "array",
+	date 		= "date",
+	bolean 		= "boolean",
+	emptyString = "";
+
 	var _isValid = function(propertiesModel, propertiesSchema){
-		for(var i in propertiesSchema){
-					if(propertiesModel.hasOwnProperty(i)){
-						if(propertiesSchema[i].type === typeof(propertiesModel[i])){
-							if(propertiesSchema[i].required){
-								switch(propertiesSchema[i].type){
-									case 'string': 
-										if(propertiesModel[i] === ''){
-											result.errors.push("ERROR: Property of Schema '"+i+"' is required");
-											result.valid =  false;
-										}
-										break;
-									case 'array':
-											for(var j in propertiesSchema[i]){
-												_isValid(propertiesModel[i][j], propertiesSchema[i].properties);
-											}
-										break;
-									case 'Date': 
-											var d = new Date(propertiesModel);
-											if(isNaN(d.getTime())){
-												result.errors.push("ERROR: Property of Schema '"+i+"' is required");
-												result.valid =  false;
-											}
-										break;
-									case 'object': 
-										_isValid(propertiesModel[i], propertiesSchema[i].properties);
-										break;
-									case 'object': break;
-									case 'number': break;
-									case 'boolean': break;
-									default: break;
+		for(var key in propertiesSchema){
+			var typeModel = typeof(propertiesModel[key]),
+				typeSchema = propertiesSchema[key].type,
+				modelItem = propertiesModel[key],
+				schemeItem = propertiesSchema[key],
+				required = propertiesSchema[key].required;
+			
+			typeModel = Array.isArray(modelItem) ? array : typeModel;
+
+			if(propertiesModel.hasOwnProperty(key)){
+				if( typeSchema === typeModel ) {
+					if(required){
+						switch(typeSchema){
+							case string: 
+								if(modelItem === emptyString){
+									result.errors.push("Property of Schema '"+ key +"' is required");
+									result.valid =  false;
 								}
-							}
-					}else{
-						result.errors.push("ERROR: Was found '"+typeof(propertiesModel[i])+"' type in property '"+i+"' and '"+propertiesSchema[i].type+"' type is needed ");
-						result.valid =  false;
+								break;
+							case array:
+									for(var i in schemeItem){
+										_isValid(modelItem[i], schemeItem.properties);
+									}
+								break;
+							case date: 
+									var d = new Date(modelItem);
+									if(isNaN(d.getTime())){
+										result.errors.push("Property of Schema '"+ key +"' is required");
+										result.valid =  false;
+									}
+								break;
+							case object: 
+								_isValid(modelItem, schemeItem.properties);
+								break;
+							case number: break;
+							case boolean: break;
+							default: break;
+						}
 					}
 				}else{
-					if(propertiesSchema[i].required){
-						result.errors.push("ERROR: Property of Schema '"+i+"' not found");
-						result.valid =  false;
-					}
+					result.errors.push("Was found '"+ typeModel +"' type in the property '"+key+"', and '"+typeSchema+"' type is needed.");
+					result.valid =  false;
 				}
+			}else{
+				if(required){
+					result.errors.push("Property of Schema '"+key+"' not found");
+					result.valid =  false;
+				}
+			}
 				
 		}
 	};

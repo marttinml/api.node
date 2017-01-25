@@ -1,5 +1,5 @@
 {
-    "name": "api.toBusiness",
+    "name": "api.node",
     "version": "0.0.1",
     "dependencies": {
       "express": "~4.8.8",

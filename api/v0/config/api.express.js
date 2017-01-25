@@ -11,10 +11,6 @@ var express         = require("express"),
 
 module.exports = function(){
 
-    app.use(bodyParser.urlencoded({
-        extended: true
-    }));
-
     // CORDS
     app.use(function (req, res, next) {
         res.setHeader('Access-Control-Allow-Origin', '*');
