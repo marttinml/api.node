@@ -2,7 +2,6 @@ var testModel 	= require('./test.model'),
     assert      = require('assert'),
     connection  = require('../../config/api.mongodb'),
     Log         = require('../../shared/log'),
-    merge       = require('merge'),
     controller  = 'test',
     self        = module.exports;
 
